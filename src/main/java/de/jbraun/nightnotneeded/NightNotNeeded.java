@@ -39,7 +39,8 @@ public class NightNotNeeded extends JavaPlugin {
                     mAwaiterTask = Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(getThis(), new Runnable(){
                         @Override
                         public void run() {
-                            Bukkit.getServer().getWorld("world").setTime(TIME_DAY);
+                            Bukkit.getServer().getWorlds().get(0).setTime(TIME_DAY);
+                            Bukkit.getServer().getWorlds().get(0).setStorm(false);
                             Bukkit.getServer().broadcastMessage(ChatColor.YELLOW + "Good morning world!");
                             mAwaiterTask = INVALID_TASK;
                         }
