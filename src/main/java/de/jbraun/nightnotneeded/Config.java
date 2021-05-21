@@ -60,8 +60,10 @@ public class Config {
     }
 
     private int tryParseNumberAsleep(String asleepString) throws InvalidConfigurationException {
-        if(asleepString == null)
+        asleepString = asleepString.trim();
+        if(asleepString == null || asleepString.isEmpty())
             asleepString = "100%";
+
         boolean stringShouldEnd = false;
         boolean isPercentage = false;
         int endOfNumber = -1;
