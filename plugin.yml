@@ -1,0 +1,12 @@
+name: NightNotNeeded
+main: de.jbraun.nightnotneeded.NightNotNeeded
+version: 1.0-SNAPSHOT
+commands:
+  nnn:
+    description: Reload the config or set config parameters
+    usage: /nnn reload (or) /nnn set <option> <value>
+permissions:
+  nightnotneeded.commands:
+    description: Allows to set and reload options.
+    default: op
+api-version: 1.16
