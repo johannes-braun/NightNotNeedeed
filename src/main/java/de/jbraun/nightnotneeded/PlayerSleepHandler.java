@@ -11,8 +11,6 @@ import org.bukkit.event.player.PlayerBedLeaveEvent;
 
 public class PlayerSleepHandler implements Listener {
 
-    private int mNumPlayersAsleep = 0;
-    private int mRequiredAsleep = 0;
     private NightNotNeeded mContext;
 
     public PlayerSleepHandler(NightNotNeeded context)
@@ -21,7 +19,19 @@ public class PlayerSleepHandler implements Listener {
     }
 
     public boolean shouldSkipNight() {
-        return mNumPlayersAsleep > 0 && mNumPlayersAsleep >= mRequiredAsleep;
+        int numAsleep = getNumPlayersSleeping();
+        int numRequired = getNumPlayersRequired();
+        return numAsleep > 0 && numAsleep >= numRequired;
+    }
+
+    private int getNumPlayersSleeping() {
+        int counter = 0;
+        for(Player p : Bukkit.getOnlinePlayers())
+        {
+            if(p.isSleeping())
+                ++counter;
+        }
+        return counter;
     }
 
     @EventHandler
@@ -29,9 +39,9 @@ public class PlayerSleepHandler implements Listener {
     {
         if(ev.getBedEnterResult() == PlayerBedEnterEvent.BedEnterResult.OK)
         {
-            mRequiredAsleep = getNumPlayersRequired();
-            ++mNumPlayersAsleep;
-            broadcastPlayerAsleepMessage(ev.getPlayer(), mRequiredAsleep);
+            int numRequired = getNumPlayersRequired();
+            int numAsleep = getNumPlayersSleeping();
+            broadcastPlayerAsleepMessage(ev.getPlayer(), numAsleep+1, numRequired);
         }
     }
 
@@ -47,45 +57,19 @@ public class PlayerSleepHandler implements Listener {
         }
     } 
 
-    @EventHandler
-    public void playerLeaveSleep(PlayerBedLeaveEvent ev)
-    {
-        mNumPlayersAsleep = Math.max(0, mNumPlayersAsleep-1);
-        if(ev.isCancelled())
-        {
-            mRequiredAsleep = getNumPlayersRequired();
-            broadcastPlayerLeaveMessage(ev.getPlayer(), mRequiredAsleep);
-        }
-    }
-
-    private void broadcastPlayerLeaveMessage(Player player, int numPlayersRequired)
+    private void broadcastPlayerAsleepMessage(Player player, int numPlayersAsleep, int numPlayersRequired)
     {
         final String playerName = player.getName();
         StringBuilder sb = new StringBuilder();
         sb.append('[');
-        sb.append(mNumPlayersAsleep);
-        sb.append('/');
-        sb.append(numPlayersRequired);
-        sb.append("] ");
-        sb.append(ChatColor.YELLOW.toString());
-        sb.append(playerName);
-        sb.append(" does not want so sleep anymore.");
-        Bukkit.getServer().broadcastMessage(sb.toString());
-    }
-
-    private void broadcastPlayerAsleepMessage(Player player, int numPlayersRequired)
-    {
-        final String playerName = player.getName();
-        StringBuilder sb = new StringBuilder();
-        sb.append('[');
-        sb.append(mNumPlayersAsleep);
+        sb.append(numPlayersAsleep);
         sb.append('/');
         sb.append(numPlayersRequired);
         sb.append("] ");
         sb.append(ChatColor.YELLOW.toString());
         sb.append(playerName);
         sb.append(" is now");
-        if(mNumPlayersAsleep > 1)
+        if(numPlayersAsleep > 1)
         {
             sb.append(" also");
         }

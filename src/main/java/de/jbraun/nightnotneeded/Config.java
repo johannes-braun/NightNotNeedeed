@@ -37,6 +37,20 @@ public class Config {
         }
     }
 
+    public void setValue(String option, String value)
+    {
+        switch(option)
+        {
+        case CFG_KEY_OVERWORLD_ONLY:
+            mContext.getConfig().set(option, isOptionValid(option, value) && 
+                (value.toLowerCase().startsWith("y") || value.toLowerCase().equals("true") || value.toLowerCase().equals("on")));
+            break;
+        default:
+            mContext.getConfig().set(option, value);
+            break;
+        }
+    }
+
     public List<String> getPossibleOptions(String option)
     {
         switch(option)
@@ -113,10 +127,6 @@ public class Config {
 
     public int loadRequiredPlayersAsleep() throws InvalidConfigurationException
     {
-        mContext.getLogger().info("number_asleep: " + mContext.getConfig().getString(CFG_KEY_PLAYER_NUMBER_ASLEEP));
-        mContext.getLogger().info("rounding_mode: " + mContext.getConfig().getString(CFG_KEY_ROUNDING_MODE));
-        mContext.getLogger().info("overworld_only: " + mContext.getConfig().getBoolean(CFG_KEY_OVERWORLD_ONLY, false));
-        
         final String asleepString = mContext.getConfig().getString(CFG_KEY_PLAYER_NUMBER_ASLEEP);
         return tryParseNumberAsleep(asleepString);
     }

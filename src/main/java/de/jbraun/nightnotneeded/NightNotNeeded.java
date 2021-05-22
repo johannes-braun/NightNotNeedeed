@@ -13,11 +13,12 @@ public class NightNotNeeded extends JavaPlugin {
     private PlayerSleepHandler mSleepHandler;
     private int mTask;
     private CheckTask mCheckTask;
+    private long mLastTime = 0;
 
     private final int TIME_DAY = 0;
     private final int INVALID_TASK = -1;
     private final long TIME_RESET_DELAY_TICKS = 50;
-    private final long CHECK_REPEAT_TICKS = 10;
+    private final long CHECK_REPEAT_TICKS = 20;
     
     private final String PERM_COMMANDS = "nightnotneeded.commands";
 
@@ -32,6 +33,13 @@ public class NightNotNeeded extends JavaPlugin {
 
         @Override
         public void run() {
+            long currentTime = Bukkit.getServer().getWorlds().get(0).getTime();
+            if(mLastTime > currentTime)
+            {
+                Bukkit.getServer().broadcastMessage(ChatColor.YELLOW + "Good morning world!");
+            }
+            mLastTime = currentTime;
+
             if(mSleepHandler.shouldSkipNight())
             {
                 if(mAwaiterTask == INVALID_TASK)
@@ -41,7 +49,6 @@ public class NightNotNeeded extends JavaPlugin {
                         public void run() {
                             Bukkit.getServer().getWorlds().get(0).setTime(TIME_DAY);
                             Bukkit.getServer().getWorlds().get(0).setStorm(false);
-                            Bukkit.getServer().broadcastMessage(ChatColor.YELLOW + "Good morning world!");
                             mAwaiterTask = INVALID_TASK;
                         }
                     }, TIME_RESET_DELAY_TICKS);
@@ -82,7 +89,7 @@ public class NightNotNeeded extends JavaPlugin {
                         return false;
                     if(mConfig.isOptionValid(opt, args[0]))
                     {
-                        getConfig().set(opt, args[0]);
+                        mConfig.setValue(opt, args[0]);
                         saveConfig();
                         loadConfig();
                         Bukkit.getServer().broadcastMessage("[NNN] Config value set: " + opt + " = " + args[0]);
@@ -107,6 +114,7 @@ public class NightNotNeeded extends JavaPlugin {
     public void onEnable() {
         super.onEnable();
 
+        mLastTime = Bukkit.getServer().getWorlds().get(0).getTime();
         mSleepHandler = new PlayerSleepHandler(this);
         Bukkit.getPluginManager().registerEvents(mSleepHandler, this);
         mCheckTask = new CheckTask();
