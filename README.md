@@ -14,10 +14,11 @@ There are two config settings you can change:
   * `floor`: Returns the nearest integral value _lower_ than the non-integral one.
   * `ceil`: Returns the nearest integral value _higher_ than the non-integral one.
   * `round`: The default mathematical rounding function, i.e. `ceil` at and over a fraction of .5, `floor` before that.
+ * `overworld_only`: A boolean value that changes the behavior of the calculation of online players. If set to `true`, only players that currently are on the overworld are considered in the calculation.
 
 ## Commands
 The plugin provides two main commands which are prefixed by a `nnn`:
 * `\nnn reload`: Reloads the config file e.g. if a server admin changed it and wants the settings to be applied.
-* `\nnn set <number_asleep|rounding_mode> <value>` sets the given config property to the desired value. If an invalid value is given, an error message is shown. There is no need for apostrophes when typing the value.
+* `\nnn set <number_asleep|rounding_mode|overworld_only> <value>` sets the given config property to the desired value. If an invalid value is given, an error message is shown. There is no need for apostrophes when typing the value.
 All commands have autocomplete functionality ingame.
 The commands require the `nightnotneeded.commands` permission, which defaults to Server-Operator-only.
