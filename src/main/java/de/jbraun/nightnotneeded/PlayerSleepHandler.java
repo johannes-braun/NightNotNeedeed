@@ -42,7 +42,8 @@ public class PlayerSleepHandler implements Listener {
         catch(InvalidConfigurationException e)
         {
             Bukkit.getServer().broadcastMessage(ChatColor.RED + "[NightNotNeeded] Plugin encountered an error, please check your config: " + e.getMessage());
-            return Bukkit.getOnlinePlayers().size();
+            // Default to "all overworld players...";
+            return Bukkit.getServer().getWorlds().get(0).getPlayers().size();
         }
     } 
 

@@ -24,7 +24,7 @@ public class NightNotNeeded extends JavaPlugin {
     private final String CMD_BASE = "nnn";
     private final String CMD_RELOAD = "reload";
     private final String CMD_SET = "set";
-    private final List<String> ALL_OPTIONS = Arrays.asList(Config.CFG_KEY_PLAYER_NUMBER_ASLEEP, Config.CFG_KEY_ROUNDING_MODE);
+    private final List<String> ALL_OPTIONS = Arrays.asList(Config.CFG_KEY_PLAYER_NUMBER_ASLEEP, Config.CFG_KEY_ROUNDING_MODE, Config.CFG_KEY_OVERWORLD_ONLY);
 
     private class CheckTask implements Runnable
     {
@@ -85,7 +85,7 @@ public class NightNotNeeded extends JavaPlugin {
                         getConfig().set(opt, args[0]);
                         saveConfig();
                         loadConfig();
-                        Bukkit.getServer().broadcastMessage("[NNN] Config value set.");
+                        Bukkit.getServer().broadcastMessage("[NNN] Config value set: " + opt + " = " + args[0]);
                     }
                     else{
                         Bukkit.getServer().broadcastMessage("[NNN] The given value was invalid.");
